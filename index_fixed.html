@@ -59,7 +59,8 @@ function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function openModal(e){$('eventForm').reset();$('eventId').value=e?.id||'';$('modalTitle').textContent=e?'일정 수정':'일정 추가';$('eventName').value=e?.name||'';$('eventDate').value=e?.date||selected;$('eventOwner').value=e?.owner||'me';$('eventStart').value=e?.start||'09:00';$('eventEnd').value=e?.end||'10:00';$('eventMemo').value=e?.memo||'';$('modalBack').classList.add('show')}
 function closeModal(){$('modalBack').classList.remove('show')}
 $('eventForm').onsubmit=ev=>{ev.preventDefault();let start=$('eventStart').value,end=$('eventEnd').value;if(end<=start){alert('종료 시간은 시작 시간보다 늦어야 해요.');return}let id=$('eventId').value;let item={id:id||String(Date.now()),name:$('eventName').value.trim(),date:$('eventDate').value,owner:$('eventOwner').value,start,end,memo:$('eventMemo').value.trim()};if(id)events=events.map(e=>e.id===id?item:e);else events.push(item);selected=item.date;view=new Date(item.date+'T12:00:00');view.setDate(1);save();closeModal();render()};
-$('addBtn').onclick=$('addDayBtn').onclick=()=>openModal();$('cancelBtn').onclick=closeModal;$('modalBack').onclick=e=>{if(e.target===$('modalBack'))closeModal()};
+$('addBtn').onclick=()=>openModal();
+if($('addDayBtn')) $('addDayBtn').onclick=()=>openModal();$('cancelBtn').onclick=closeModal;$('modalBack').onclick=e=>{if(e.target===$('modalBack'))closeModal()};
 $('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};$('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};$('todayBtn').onclick=()=>{selected=fmt(now);view=new Date(now.getFullYear(),now.getMonth(),1);render()};
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setFilter(b.dataset.filter)});
 $('allCard').onclick=()=>setFilter('all');$('meCard').onclick=()=>setFilter('me');$('partnerCard').onclick=()=>setFilter('partner');
